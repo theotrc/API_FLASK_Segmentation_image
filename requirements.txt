@@ -17,6 +17,7 @@ gunicorn>=20.1.0
 
 # Testing
 pytest>=7.2
+numpy>=1.24
 
 # Install from a virtual environment:
 # python -m venv .venv; .\.venv\Scripts\Activate.ps1; pip install -r requirements.txt
