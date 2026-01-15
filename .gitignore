@@ -2,4 +2,5 @@
 /env
 /tuto.py
 .env
-App/__pycache__
+*__pycache__
+*__init__.pyc
