@@ -1,24 +1,17 @@
 # Minimal, up-to-date requirements for this Flask app
 # Only include top-level packages actually used by the project.
 Flask>=2.2.3,<3.0
-Flask-Login>=0.6.2
-Flask-SQLAlchemy>=2.5.1
 python-dotenv>=0.21.0
-Werkzeug>=2.2.3
 
-nltk>=3.8.1
-scikit-learn>=1.2.2
-tensorflow>=2.12.0
-tf_keras>=2.12.0
-tensorflow-text>=2.12.0
+keras>=3.0
+tensorflow>=2.16.1
 google-cloud-storage>=2.7.0
 
-# Optional / production
-gunicorn>=20.1.0
 
 # Testing
 pytest>=7.2
 numpy>=1.24
+opencv-python
 
 # Install from a virtual environment:
 # python -m venv .venv; .\.venv\Scripts\Activate.ps1; pip install -r requirements.txt

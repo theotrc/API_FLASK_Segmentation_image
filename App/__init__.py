@@ -1,18 +1,14 @@
-import os
 from flask import Flask
-from App.utils import download_model
+import keras
+from App.utils import MeanIoUSoftmax
 
 
 
 app = Flask(__name__)
 
-model_path = download_model()
+unet = keras.models.load_model("App/models/saved_model2.keras",
+                                       custom_objects={"MeanIoUSoftmax": MeanIoUSoftmax})
 
-print("Model downloaded to:", model_path)
-
-
-# During testing we avoid importing heavy TensorFlow packages and loading
-# the model at import time. CI/tests should set `TESTING=1` to use a stub.
 
 
 from App import views
