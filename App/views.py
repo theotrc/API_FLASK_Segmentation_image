@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from App import app
 from logging import FileHandler, WARNING
-from App import unet
+from App import dpl_model
 import numpy as np
 import cv2
 import base64
@@ -27,26 +27,24 @@ def predict():
         img = request.files.get("image", None)
         print("Received image:", img)
         if img:
+            IMAGE_SIZE = 512
             print("image filename:", img.filename)
             npimg = np.frombuffer(img.read(), np.uint8)
             img = cv2.imdecode(npimg, cv2.IMREAD_UNCHANGED)
-            print("Image shape:", img.shape)
-            img_resized = cv2.resize(img, (160, 160))
-            img_normalized = img_resized / 255.0  # Normalize to [0, 1]
+            
+            img_resized = cv2.resize(img, (IMAGE_SIZE, IMAGE_SIZE))
+            img_normalized = np.float32(img_resized)  
             img_batch = np.expand_dims(img_normalized, axis=0)
-            print("Resized image shape:", img_resized.shape)
             
-            prediction = unet.predict(img_batch)
-            mask = np.argmax(prediction, axis=-1)[0]
-            mask = (mask * 255).astype(np.uint8)
             
-            mask_resized = cv2.resize(
-                mask,
-                (img.shape[1], img.shape[0]),
-                interpolation=cv2.INTER_NEAREST
-            )
+            prediction = dpl_model.predict(img_batch)
+            prediction = np.squeeze(prediction)
+            prediction = prediction.reshape(IMAGE_SIZE, IMAGE_SIZE, 8)
+            prediction = cv2.resize(prediction, (img.shape[1], img.shape[0]))
+            mask_prediction = np.argmax(prediction, axis=-1)
             
-            _, buffer = cv2.imencode(".png", mask_resized)
+            
+            _, buffer = cv2.imencode(".png", mask_prediction)
             mask_base64 = base64.b64encode(buffer).decode("utf-8")
                         
             return jsonify({'message': f'Image received and saved successfully.',
